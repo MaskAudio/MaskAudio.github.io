@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Masked Text-to-Audio Flow-Matching with Reward Feedback Optimization</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="helper.js" defer></script>
+    <style>
+      td {
+        vertical-align: middle;
+      }
+      audio {
+        width: 20vw;
+        min-width: 100px;
+        max-width: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+      <div class="text-center">
+        <h1>MaskAudioFLow</h1><h3>Masked Text-to-Audio Flow-Matching with Reward Feedback Optimization</h3>
+        <p><b></b></p>
+      </div>
+      <p>
+        <b>Abstract.</b>  
+       Flow-matching generative models have created significant milestones in text-to-audio generation, powered by scalable training with increased data, computational resources, and model size, while their inference-time prediction behaviors remain less explored. In this work, we propose MaskAudioFlow, a masked flow-matching transformer with iterative decoding for scaling text-to-audio prediction. Specifically, MaskAudioFlow 1) approximates the continuous velocity vector field with a flow-matching head, without the need for audio tokenization or quantization in masked prediction. 2) MaskAudioFlow masks spans of audio frames in training and samples with the probability flow ordinary differential equation (ODE), where we masked out some generation and re-predict them via iterative decoding. To further bridge the gap between MaskAudioFlow and human preferences, we fine-tune MaskAudioFlow with reward feedback from text-audio correspondence and perceptual aesthetics. Experimental results demonstrate that MaskAudioFlow achieves state-of-the-art performance in both objective and subjective evaluation, effectively trading off generation quality and latency in masked prediction. Moreover, the preference fine-tuned model MaskAudioFlow-FT exhibits superior text-audio alignment faithfulness and enhanced perceptual aesthetics.
+      </p>
+    </div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <h2 id="model" style="text-align: center;">MaskAudioFLow Overview</h2>
+    <body>
+    <p style="text-align: center;">
+        <img src="arch.png" height="200" width="800" class="img-fluid">
+    </p>
+    </body>
+        <p>
+            MaskAudioFlow consists of the following main components: 1) VAE to encode spectrogram into a latent and convert it back to spectrogram; 2) text encoder to derive high-level textual representation, 3) flow-matching transformer that masks span of continuous audio latent in training, and inference with ODE sampler via iterative decoding, and 4) separately-trained neural vocoder to convert mel-spectrograms to raw waveforms. In the following sections, we describe these components in detail.
+        </p>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <h2 id="model-overview" style="text-align: left;">Table of Contents</h2>
+    <body>
+    <p style="text-align: left;">
+    <ul style="list-style: outside none none !important;">
+        <li><a href="#models" class="btn border-white bg-white fw-bold">Models comparison</a></li>
+       <li><a href="#efficiency" class="btn border-white bg-white fw-bold">Denosing comparison</a></li>
+       <li><a href="#diversity" class="btn border-white bg-white fw-bold">Reward fine-tuning comparison</a></li>
+
+    </ul>
+    </p>
+    </body>
+</div>
+
+
+
+    <div class="container shadow p-5 mb-5 bg-white rounded">
+      <h3>Models comparison<a id="models"/></h3>
+      <div class="container pt-3 table-responsive">
+        <table
+          class="table table-hover"
+          id="models-compare">
+          <thead>
+            <tr>
+              <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspInput&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+              <th width="15%">GT</th>
+              <th width="15%">AudioLDM2</th>
+              <th width="15%">Make-An-Audio2</th>
+                <th width="15%">Tango2</th>
+              <th width="15%">SoundCTM</th>
+              <th width="15%">Ours</th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>  </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+
+
+    <div class="container shadow p-5 mb-5 bg-white rounded">
+      <h3>Denosing comparison<a id="efficiency"/></h3>
+      <div class="container pt-3 table-responsive">
+        <table
+          class="table table-hover"
+          id="supervision-efficiency-table">
+          <thead>
+            <tr>
+              <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspInput&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+              <th style="text-align: center">50 Steps</th>
+              <th style="text-align: center">25 Steps</th>
+              <th style="text-align: center">20 Steps</th>
+              <th style="text-align: center">15 Steps</th>
+              <th style="text-align: center">10 Steps</th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+
+
+        <div class="container shadow p-5 mb-5 bg-white rounded">
+      <h3>Reward fine-tuning comparison<a id="diversity"/></h3>
+      <div class="container pt-3 table-responsive">
+        <table
+          class="table table-hover"
+          id="speech-diversity">
+          <thead>
+            <tr>
+              <th style="text-align: center" > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspInput&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+              <th width="15%">\tau=0.1</th>
+              <th width="15%">\tau=1</th>
+              <th width="15%">\tau=10</th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+             <tr height=200px> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+
+
+
+  </body>
+</html>
