@@ -24,13 +24,21 @@
   <body>
     <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
       <div class="text-center">
-        <h1>MaskAudioFLow</h1><h3>Masked Text-to-Audio Flow-Matching with Reward Feedback Optimization</h3>
+        <h1>MaskAudioFLow</h1><h3>Masked Text-to-Audio Flow-Matching and Reward Feedback Optimization</h3>
         <p><b></b></p>
       </div>
+            <p class="mt-3 text-center">
+        <a href="Paper_Appendix.pdf"
+           class="btn btn-outline-primary btn-lg fw-bold"
+           target="_blank">
+          Paper Appendix
+        </a>
+      </p>
+      
       <p>
         <b>Abstract.</b>  
-       Flow-matching generative models have created significant milestones in text-to-audio generation, powered by scalable training with increased data, computational resources, and model size, while their inference-time prediction behaviors remain less explored. In this work, we propose MaskAudioFlow, a masked flow-matching transformer with iterative decoding for scaling text-to-audio prediction. Specifically, MaskAudioFlow 1) approximates the continuous velocity vector field with a flow-matching head, without the need for audio tokenization or quantization in masked prediction. 2) MaskAudioFlow masks spans of audio frames in training and samples with the probability flow ordinary differential equation (ODE), where we masked out some generation and re-predict them via iterative decoding. To further bridge the gap between MaskAudioFlow and human preferences, we fine-tune MaskAudioFlow with reward feedback from text-audio correspondence and perceptual aesthetics. Experimental results demonstrate that MaskAudioFlow achieves state-of-the-art performance in both objective and subjective evaluation, effectively trading off generation quality and latency in masked prediction. Moreover, the preference fine-tuned model MaskAudioFlow-FT exhibits superior text-audio alignment faithfulness and enhanced perceptual aesthetics.
-      </p>
+        Flow-matching generative models have created significant milestones in text-to-audio generation, powered by scalable training with increased data, computational resources, and model size, while their scalable inference remains less explored. In this work, we propose MaskAudioFlow, a continuous flow-matching transformer with masked generative modeling designed for scaling text-to-audio inference-time prediction. Specifically, MaskAudioFlow 1) masks spans of audio frames in training and approximates the continuous velocity vector field with flow-matching objective, and 2) performs inference via masked prediction, where we mask out generation and re-predict them through iterative decoding. To reduce the gap between generation and human preferences, we fine-tune MaskAudioFlow using reward signals from text-audio correspondence and perceptual aesthetics. Experimental results demonstrate that MaskAudioFlow achieves state-of-the-art performance in text-to-audio generation, effectively scaling inference-time computation through iterative masked prediction. Moreover, the preference-tuned model demonstrates superior text-audio alignment faithfulness and enhanced perceptual aesthetics. 
+             </p>
     </div>
 
 <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
